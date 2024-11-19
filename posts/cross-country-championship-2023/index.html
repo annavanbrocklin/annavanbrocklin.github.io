@@ -9,7 +9,7 @@
 <meta name="author" content="Anna Van Brocklin">
 <meta name="dcterms.date" content="2024-11-05">
 
-<title>Are underclassmen are outperforming upperclassmen in cross country? – Anna's Sports Stories</title>
+<title>Are Underclassmen Outperforming Upperclassmen in Cross Country? – Anna’s Sports Stories</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -154,7 +154,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Are underclassmen are outperforming upperclassmen in cross country?</h1>
+      <h1 class="title">Are Underclassmen Outperforming Upperclassmen in Cross Country?</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">crosscountry</div>
                 <div class="quarto-category">sports</div>
@@ -324,66 +324,68 @@ Caused by warning in `ifelse()`:
 </div>
 </div>
 </div>
-<p>At first glance, it appears that the runners are fairly even when it comes to finishing time. However when we take a deeper look, we can see that while underclassmen have more runners finishing with the fastest and slowest times, more upperclassmen runners are finishing within the middle of these times.</p>
-<p>Comparing the two, the underclassmen variety of finishing times averages out to be similar to the upperclassmen’s times, making them a pretty even mix.</p>
+<p>The findings from our data show a decently even spread between runners of each year. There are noticeable patterns within the data, but this plot alone isn’t enough to prove one way or another in terms of whether experience has a significant impact on a runner’s performance in cross country.</p>
+<p>While we can see the groupings of runners that finished in the middle of the pack within the juniors and seniors, we can also see that freshman and sophomores tend to have a more even spread with runners evenly spaced throughout the race</p>
+<p>From our data it is clear when looking at the averages between seniors, juniors, sophomores and freshmen that seniors take the lead. Additionally, there 157 upperclassmen runners in this specific race, with only 79 underclassmen runners which could have a major impact on the average race times overall, and help their average race time. It’s also worth noting that despite the data showing juniors in last according to the average, out of all four years, juniors individually made up 50% of the top 10 runners. This is why it is important to look at our data in different ways, as one visual can tell one side of a story and another can tell a different perspective.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>xc_log_filtered <span class="ot">&lt;-</span> xc_log <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>TIME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DNS"</span>, <span class="st">"DNF"</span>))</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>xc_log_filtered<span class="sc">$</span>TIME <span class="ot">&lt;-</span> <span class="fu">ms</span>(xc_log_filtered<span class="sc">$</span>TIME)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>xc_log_clean <span class="ot">&lt;-</span> xc_log <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>TIME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DNF"</span>, <span class="st">"DNS"</span>)) <span class="sc">%&gt;%</span>  <span class="co"># Remove rows with DNF or DNS</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">FinishingTime =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(TIME, <span class="st">"^</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">*</span> <span class="dv">60</span> <span class="sc">+</span>  <span class="co"># Extract minutes and convert to seconds</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(TIME, <span class="st">"</span><span class="sc">\\</span><span class="st">d+$"</span>)),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Class =</span> <span class="fu">case_when</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"^FR|^SO"</span>, YEAR) <span class="sc">~</span> <span class="st">"Underclassmen"</span>,  <span class="co"># Freshman or Sophomore</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"^JR|^SR"</span>, YEAR) <span class="sc">~</span> <span class="st">"Upperclassmen"</span>,   <span class="co"># Junior or Senior</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span>                           <span class="co"># Handle other cases as "Other"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(xc_log_clean, <span class="fu">aes</span>(<span class="at">x =</span> FinishingTime <span class="sc">/</span> <span class="dv">60</span>, <span class="at">fill =</span> Class)) <span class="sc">+</span>  <span class="co"># Divide by 60 to show time in minutes</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">fill =</span> <span class="st">"grey"</span>) <span class="sc">+</span>  <span class="co"># Adjust binwidth, position, and fill color</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Class, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Is Beginner's Luck the Key to Success?"</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Underclassmen Runners Show Promising Talent, but is that Enough to Beat Experienced Runners?</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Finishing Time (Minutes)"</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Runners"</span>,</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Track &amp; Field Results Reporting System | By Anna Van Brocklin"</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">15</span>, <span class="dv">15</span>, <span class="dv">15</span>, <span class="dv">15</span>)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in .parse_hms(..., order = "MS", quiet = quiet): Some strings failed to
-parse</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>avg_times <span class="ot">&lt;-</span> xc_log_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_time =</span> <span class="fu">mean</span>(TIME))</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(avg_times, <span class="fu">aes</span>(<span class="at">x =</span> avg_time, <span class="at">y =</span> YEAR, <span class="at">fill =</span> YEAR)) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="st">"FR-1"</span>, <span class="st">"SO-2"</span>, <span class="st">"JR-3"</span>, <span class="st">"SR-4"</span>),</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Freshman"</span>, <span class="st">"Sophomore"</span>, <span class="st">"Junior"</span>, <span class="st">"Senior"</span>)) <span class="sc">+</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#8B0000"</span>, <span class="st">"#033504"</span>, <span class="st">"#00003f"</span>, <span class="st">"#e6c200"</span>),</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Freshman"</span>, <span class="st">"Sophomore"</span>, <span class="st">"Junior"</span>, <span class="st">"Senior"</span>)) <span class="sc">+</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">35</span>), <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>)) <span class="sc">+</span> </span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Average Race Time (Minutes)"</span>, </span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Year"</span>, </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"New Runners are Challenging Upperclassmen"</span>,</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Experienced Runners Lead the Pack, but Underclassmen aren't Far Behind"</span>,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Source: Track &amp; Field Results Reporting System | By Anna Van Brocklin"</span>) <span class="sc">+</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 4 rows containing missing values or values outside the scale range
-(`geom_bar()`).</code></pre>
+<pre><code>Warning: Removed 19 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>When looking at average times between classes, seniors have a strong lead. However at the same time, third year runners come in last. The underclassmen aren’t quite on the same level in comparison to the seniors, however, both freshman and sophomores are consistent and fall right in between the juniors and seniors.</p>
-<p>While this doesn’t prove either group to be overwhelmingly faster than another, we can see that seniors are the top performers on average while underclassmen show more consistency in terms of top performers.</p>
+<p>While both underclassmen and upperclassmen appear to be more skewed to the left, faster times, underclassmen have a slight edge compared to the older runners. This suggests that newer runners are not only keeping pace with their more experienced counterparts but are also pushing the boundaries of performance.</p>
+<p>That being said, upperclassmen have more runners finishing in the midst of the race, with times closer to the overall average. It can also be said that upperclassmen seem to have less runners towards the right of the race, which shows they tend to be a bit more consistent overall.</p>
 <p>The data from the NCAA DI Men’s Cross Country Championship reveals interesting patterns in performance across different class levels. While seniors emerge as the top performers on average, the consistency of underclassmen, particularly among the top finishers, is notable. Although juniors lag behind, freshmen and sophomores hold their own, bridging the gap between the less experienced and the experienced runners.</p>
+<p>While visually the two groups look different in terms of their data, as a whole, one group of runners doesn’t seem to have a strong advantage over the others, at least in this particular race. To get a better idea of the data and consistencies, we’d most likely need to look at more races and make comparisons to prior year’s races.</p>
+<p>We do see clear differences in the data between the different years of runners, however, there are a few factors that could lead to this such as coaching, training, injury history and of course individual talent. Additionally, there 157 upperclassmen runners in this specific race, with only 79 underclassmen runners which could have a major impact on the average race times overall.</p>
 <p>Interestingly, while underclassmen display a wider range of finishing times, capturing both some of the fastest and slowest, upperclassmen often cluster around middle performance ranges. This distribution ultimately balances out, with both groups achieving comparable average times. These findings suggest that while experience may play a role, it doesn’t overwhelmingly favor one class level over another, emphasizing a fairly level playing field in college cross country.</p>
 
 
